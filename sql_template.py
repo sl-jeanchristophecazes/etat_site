@@ -1,5 +1,4 @@
-query = 
-"""
+query = """
 SELECT {full_cols} FROM
 
 
