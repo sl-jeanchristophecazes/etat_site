@@ -7,19 +7,26 @@ def format_query(date_debut,
                 datefin, 
                 typepublication,
                 sourcecouplage,
+                dim_annonce_col_list,
+                annonce_col_list,
                 typetransaction_table,
-                typetransaction_cols,
-                typetransaction_join_idannonce,
-                typetransaction_join_datemaj,
-                typepublication_table,
-                typepublication_cols,
-                typepublication_join_idannonce,
-                typepublication_join_datemaj
+                typetransaction_col_list,
+                typebien_table,
+                typebien_col_list
                 ):
 
-    # Full column list for all the tables
-    
-    full_cols = []
+    # Full columns for all the tables (str)
+    full_cols = ''
 
-    
+    # Full columns for annonce_history (str)
+    annonce_cols = ''
 
+    # Full columns for typetransaction_table (str)
+    transaction_cols = ''
+
+    # Full columns for typebien_table (str)
+    bien_cols = ''
+
+    idannonce_join_for_annonce = ''
+    idannonce_join_for_typetransaction = ''
+    idannonce_join_for_typebien = ''
