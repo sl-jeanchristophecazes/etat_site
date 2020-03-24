@@ -45,12 +45,13 @@ def format_query(date_debut,
 
     # Full columns for typebien_table (str)
     bien_cols = ', '.join(typebien_col_list)
-
+    
+    # Join cols
     idannonce_join_for_annonce = annonce_col_list[0]
     idannonce_join_for_typetransaction = typetransaction_col_list[0]
     idannonce_join_for_typebien = typebien_col_list[0]
     
-    # config_dict
+    # Config_dict
     config_dict = {'full_cols': full_cols,
                    'date_debut': date_debut,
                    'date_fin': date_fin, 
@@ -70,21 +71,3 @@ def format_query(date_debut,
     query = query.format(**config_dict)
     
     return(query)
-
-
-
-if __name__ == '__main__':
-
-    full_cols, dim_annonce_cols, annonce_cols, transaction_cols, bien_cols = format_query(date_debut = '2020-03-01', 
-                                                datefin = '2020-03-15', 
-                                                typepublication = 1,
-                                                sourcecouplage = 0,
-                                                dim_annonce_col_list = ['iddwh_annonce'],
-                                                annonce_col_list = ['idannonce','libelle_fr'],
-                                                typetransaction_table = 'immobc.abappartement_history',
-                                                typetransaction_col_list = ['idannonce', 'px', 'prixmaxi'],
-                                                typebien_table = 'immobc.atvente_history',
-                                                typebien_col_list = ['idannonce', 'si_meuble']
-                                                )
-
-    print(transaction_cols)
