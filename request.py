@@ -18,6 +18,8 @@ def format_query(date_debut,
     # Full columns for all the tables (str)
     full_cols = ''
 
+    
+
     # Full columns for annonce_history (str)
     annonce_cols = ''
 
@@ -30,3 +32,22 @@ def format_query(date_debut,
     idannonce_join_for_annonce = ''
     idannonce_join_for_typetransaction = ''
     idannonce_join_for_typebien = ''
+
+    return(full_cols)
+
+
+if __name__ == '__main__':
+
+    res = format_query(date_debut = '2020-03-01', 
+                datefin = '2020-03-15', 
+                typepublication = 1,
+                sourcecouplage = 0,
+                dim_annonce_col_list = ['iddwh_annonce'],
+                annonce_col_list = ['idannonce','libelle_fr'],
+                typetransaction_table = 'immobc.abappartement_history',
+                typetransaction_col_list = ['idannonce', 'px', 'prixmaxi'],
+                typebien_table = 'immobc.atvente_history',
+                typebien_col_list = ['idannonce', 'si_meuble']
+                )
+
+    print(res)
