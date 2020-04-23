@@ -12,7 +12,7 @@ SELECT {full_cols} FROM
             (
             SELECT "iddwh_annonce", MAX(datedebut) datemaj
 
-                   FROM "dwhdweb"."dimannoncepublicationhisto" WHERE datedebut > timestamp '2020-03-01'
+                   FROM "dwhdweb"."dimannoncepublicationhisto" WHERE datedebut > timestamp '{date_debut}'
 
             GROUP BY "iddwh_annonce"
             )
@@ -26,16 +26,16 @@ INNER JOIN
 
 
      (
-           SELECT *
+           SELECT {dim_annonce_cols}, datedebut_ref
                       FROM
                          (
                           SELECT
-                               {dim_annonce_cols} ,
+                               *, 
                                DATE("datedebut") AS datedebut_ref
 
                                FROM "dwhdweb"."dimannoncepublicationhisto"
                          )
-                      WHERE datedebut_ref >= TIMESTAMP '{datedebut}' AND (iddwh_typepublication = {} AND iddwh_typepublicationcouplage = {})
+                      WHERE datedebut_ref >= TIMESTAMP '{date_debut}' AND (iddwh_typepublication = {typepublication} AND iddwh_typepublicationcouplage = {sourcecouplage})
 
     )
     AS full_dwh
@@ -50,12 +50,12 @@ INNER JOIN
                       FROM
                          (
                           SELECT
-                               {annonce_cols} ,
+                               {annonce_cols},
                                CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) AS datemaj
 
                                FROM "immobc"."annonce_history"
                          )
-                      WHERE datemaj >= TIMESTAMP '{date_t}'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}' AND "idtypetransaction" = {idtypetransaction} AND "idtypebien" = {idtypebien}
 
     )
     AS t2
@@ -69,16 +69,16 @@ INNER JOIN
            SELECT *
                       FROM
                           (
-                          SELECT  idannonce, si_meuble,
+                          SELECT  {bien_cols},
                                   CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
 
-                                  FROM immobc.abmaison_history
+                                  FROM immobc.{typebien_table}
                           )
-                      WHERE datemaj >= TIMESTAMP '2020-03-01'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}'
     )
      AS t3
 
-ON t1.iddwh_annonce = t3.idannonce AND t3.datemaj = t2.datemaj
+ON t1.iddwh_annonce = t3.{idannonce_join_for_typebien} AND t3.datemaj = t2.datemaj
 
 INNER JOIN
 
@@ -86,15 +86,15 @@ INNER JOIN
            SELECT *
                       FROM
                           (
-                          SELECT idannonce, px, prixmaxi,
+                          SELECT {transaction_cols},
                                   CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
 
-                                  FROM immobc.atvente_history
+                                  FROM immobc.{typetransaction_table}
                           )
-                      WHERE datemaj >= TIMESTAMP '2020-03-01'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}'
     )
 
 AS t4
 
-ON t1.iddwh_annonce = t4.idannonce AND t4.datemaj = t2.datemaj
+ON t1.iddwh_annonce = t4.{idannonce_join_for_typetransaction} AND t4.datemaj = t2.datemaj
 """
