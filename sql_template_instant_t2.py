@@ -35,7 +35,7 @@ INNER JOIN
 
                                FROM "dwhdweb"."dimannoncepublicationhisto"
                          )
-                      WHERE datedebut_ref >= TIMESTAMP '2020-03-01' AND (iddwh_typepublication = {} AND iddwh_typepublicationcouplage = {})
+                      WHERE datedebut_ref >= TIMESTAMP '{datedebut}' AND (iddwh_typepublication = {} AND iddwh_typepublicationcouplage = {})
 
     )
     AS full_dwh
