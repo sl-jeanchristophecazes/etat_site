@@ -5,13 +5,13 @@ SELECT {full_cols} FROM
       (
            SELECT {dim_annonce_cols}
                   from dwhdweb.dimannoncepublicationhisto
-                  WHERE (datedebut >   TIMESTAMP '{date_debut}' AND datefin < TIMESTAMP '{date_fin}' AND
+                  WHERE (datedebut BETWEEN TIMESTAMP '{date_debut}' AND TIMESTAMP '{date_fin}' AND
                         (iddwh_typepublication = {typepublication} AND iddwh_typepublicationcouplage = {sourcecouplage}))
       )
       AS t1
 
 
-LEFT JOIN
+INNER JOIN
 
 
      (
@@ -25,7 +25,7 @@ LEFT JOIN
                                FROM "immobc"."annonce_history"
                          )
 
-                      WHERE datemaj BETWEEN TIMESTAMP '{date_debut}' AND TIMESTAMP '{date_fin}'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}' AND idtypetransaction = {idtypetransaction} AND idtypebien = {idtypebien}
     )
     AS t2
 
@@ -41,9 +41,9 @@ INNER JOIN
                           SELECT  {bien_cols},
                                   CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
 
-                                  FROM {typebien_table}
+                                  FROM "immobc".{typebien_table}
                           )
-                      WHERE datemaj BETWEEN TIMESTAMP '{date_debut}' AND TIMESTAMP '{date_fin}'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}'
     )
      AS t3
 
@@ -58,9 +58,9 @@ INNER JOIN
                           SELECT {transaction_cols},
                                   CAST(from_iso8601_timestamp(CONCAT(CAST(year AS VARCHAR),'-',LPAD(CAST(month AS VARCHAR),2,'0'),'-',LPAD(CAST(day AS VARCHAR),2,'0'))) AS TIMESTAMP) datemaj
 
-                                  FROM {typetransaction_table}
+                                  FROM "immobc".{typetransaction_table}
                           )
-                      WHERE datemaj BETWEEN TIMESTAMP '{date_debut}' AND TIMESTAMP '{date_fin}'
+                      WHERE datemaj >= TIMESTAMP '{date_debut}' 
     )
 
 AS t4
